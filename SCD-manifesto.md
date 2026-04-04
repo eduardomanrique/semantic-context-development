@@ -16,9 +16,10 @@ Code becomes a derived artifact; semantic continuity becomes the main developmen
 
 - A development model centered on a living semantic source of truth
 - Maintained by AI, validated by humans
-- Operationalized through agents that follow an explicit repository standard for semantic maintenance
+- Operationalized through agents that follow a reusable SCD repository standard and create or maintain the required Semantic Context structure inside each adopting project
 - Continuously enriched through implementation, tests, failures, corrections, and clarifications, with every behaviorally relevant test expectation reflected in the Semantic Context
 - Used to validate new tasks, detect conflicts, explain system behavior, guide implementation, and preserve the information required for behaviorally compatible regeneration
+- Based on a canonical Semantic Context used as primary agent memory, while raw interaction history remains non-canonical supporting evidence
 
 ## What it is not
 
@@ -36,14 +37,15 @@ Current Spec-Driven Development treats specifications as primary artifacts that 
 
 - AI maintains the Semantic Context
 - Humans validate semantic evolution through interaction
-- Agent behavior must be derived from the Semantic Context through a defined operational standard, and changes to the governance-relevant parts of that standard require stricter human approval
+- Agent behavior must follow a stable SCD operational standard, while project semantic evolution happens through the Semantic Context
 - No meaningful code change is complete unless the Semantic Context is reconciled with it
 - The Semantic Context must capture not only intent, but also all semantically relevant details required to regenerate a behaviorally compatible system
 - Every test the system is expected to pass must correspond to behavior described or derivable from the Semantic Context
+- Raw conversation history should not be treated as the primary working context of the agent; only semantically consolidated knowledge should enter the Semantic Context
 
 ## Initial hypothesis
 
-A continuously evolving Semantic Context can preserve system intent better than code alone because code reveals behavior, but does not always clearly reveal intention, rationale, whether a behavior is accidental, which structural details are essential for future compatible regeneration, or which tested behaviors are part of the intended system contract.
+A continuously evolving Semantic Context can preserve system intent better than code alone because code reveals behavior, but does not always clearly reveal intention, rationale, whether a behavior is accidental, which structural details are essential for future compatible regeneration, which tested behaviors are part of the intended system contract, or which parts of prior interaction history should remain evidence rather than become canonical system meaning.
 
 ## Research questions
 
@@ -58,10 +60,16 @@ A continuously evolving Semantic Context can preserve system intent better than 
 
 ## Short formulation
 
-The system should be understood, validated, and evolved through a living semantic source maintained by AI agents whose operational behavior is derived from that same semantic source, such that business behavior and required tests remain answerable even without direct access to code, while code itself is treated as a compiled artifact of Semantic Context.
+The system should be understood, validated, and evolved through a living semantic source maintained by AI agents that follow a stable SCD operational standard, such that business behavior and required tests remain answerable even without direct access to code, while code itself is treated as a compiled artifact of Semantic Context.
 
 ## Agent standard
 
-Semantic Context Development depends not only on the existence of a Semantic Context, but also on the existence of a consistent agent behavior standard derived from it. Agents working on the system must follow explicit operational instructions for how to read, update, validate, reconcile, and merge the Semantic Context, but those instructions should be generated from the Semantic Context itself rather than treated as an independent source of truth.
+Semantic Context Development depends not only on the existence of a Semantic Context, but also on the existence of a stable agent behavior standard. That standard should not be reinvented continuously inside each project. Instead, SCD should provide a reusable operational standard — for example through a base AGENTS.md template — that defines how agents must read, update, validate, reconcile, and merge the Semantic Context.
 
-In this model, the Semantic Context is primary, and repository agent instructions are a derived operational view of it. This reduces drift between system meaning and agent behavior. However, the governance-relevant parts of the Semantic Context that define how agents are allowed to behave are more strictly controlled: agents may propose changes, but those changes require explicit human approval before becoming operational policy.
+When a project adopts SCD, agents following that standard are responsible for creating and maintaining the required project structure inside the target repository itself, including the Semantic Context and its supporting areas such as raw history. In this model, the Semantic Context is the living source of system meaning within the adopting project, while the agent standard is the stable method used to maintain it. The Semantic Context evolves continuously with the project; the SCD agent standard evolves much more slowly, as part of the method itself. Projects may adopt or version that standard, but it should not drift implicitly as part of normal feature work.
+
+## Canonical memory principle
+
+Semantic Context Development requires a strict distinction between canonical semantic memory and raw interaction history inside each adopting project. The Semantic Context is the canonical memory used by agents to understand, validate, and evolve the system. Raw conversation logs, prompts, and exploratory interaction history may be retained in a separate history area for audit, explanation, or historical reconstruction, but they should not be treated as the agent's primary working context.
+
+Only semantically consolidated knowledge should be promoted into the Semantic Context. This prevents context overload, reduces semantic drift, and keeps the agent focused on the current intended system meaning rather than on unfiltered historical dialogue.

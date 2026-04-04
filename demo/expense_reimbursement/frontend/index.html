@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Reimbursement System</title>
+    <link rel="stylesheet" href="/static/app.css" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-left"></div>
+    <div class="page-glow page-glow-right"></div>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Expense Reimbursement System</p>
+        <h1>Draft, review, and submit a single expense claim.</h1>
+        <p class="hero-copy">
+          This first product slice supports one expense per claim. Start a new draft,
+          reopen an existing claim by identifier, save changes while the claim is in
+          draft, and submit it when all required fields are complete.
+        </p>
+      </section>
+
+      <section class="grid">
+        <section class="card action-card">
+          <h2>Start a claim</h2>
+          <label class="field">
+            <span>Employee ID</span>
+            <input id="ownerEmployeeId" type="text" placeholder="employee-123" />
+          </label>
+          <button id="createClaimButton" class="button button-primary">Create draft claim</button>
+          <p class="hint">A new claim always starts in <strong>DRAFT</strong>.</p>
+        </section>
+
+        <section class="card action-card">
+          <h2>Open a claim</h2>
+          <label class="field">
+            <span>Claim ID</span>
+            <input id="claimIdLookup" type="text" placeholder="Paste an existing claim id" />
+          </label>
+          <button id="loadClaimButton" class="button button-secondary">Load claim</button>
+          <p class="hint">Use this to reopen a draft or inspect a submitted claim.</p>
+        </section>
+      </section>
+
+      <section class="card workspace" id="workspace">
+        <div class="workspace-header">
+          <div>
+            <p class="eyebrow">Claim workspace</p>
+            <h2 id="workspaceTitle">No claim loaded</h2>
+          </div>
+          <span id="claimStatusBadge" class="status-badge">Idle</span>
+        </div>
+
+        <div id="feedback" class="feedback" hidden></div>
+
+        <div class="claim-meta">
+          <div>
+            <span class="meta-label">Claim ID</span>
+            <code id="claimIdValue">Not created yet</code>
+          </div>
+          <div>
+            <span class="meta-label">Owner</span>
+            <span id="claimOwnerValue">Not set</span>
+          </div>
+        </div>
+
+        <form id="claimForm" class="claim-form">
+          <label class="field">
+            <span>Actor employee ID</span>
+            <input id="actorEmployeeId" type="text" placeholder="employee-123" />
+          </label>
+
+          <label class="field field-wide">
+            <span>Description</span>
+            <textarea
+              id="description"
+              rows="4"
+              placeholder="Describe the business purpose of the expense"
+            ></textarea>
+          </label>
+
+          <label class="field">
+            <span>Amount</span>
+            <input id="amount" type="number" step="0.01" min="0" placeholder="18.40" />
+          </label>
+
+          <label class="field">
+            <span>Category</span>
+            <input id="category" type="text" placeholder="Travel" />
+          </label>
+        </form>
+
+        <div class="button-row">
+          <button id="saveClaimButton" class="button button-secondary" disabled>Save draft</button>
+          <button id="submitClaimButton" class="button button-primary" disabled>Submit claim</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>
