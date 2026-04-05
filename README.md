@@ -15,11 +15,28 @@ This repository contains the **method**, not only a production project built wit
 It currently includes:
 
 - the SCD concept and manifesto
-- the base agent operating standard in `AGENTS.md.tmpl`
+- the base agent operating standard in `AGENTS.md.tmpl`, derived from the SCD manifesto
 - a demo project showing the method in use
 - the demo interaction history
 - a regenerated version of the demo recreated from Semantic Context
 - ongoing notes and experiments around the method
+
+## How to use SCD in a project
+
+The `AGENTS.md.tmpl` file in this repository was generated from the SCD manifesto and expresses the method as an operational agent standard.
+
+To use SCD in a real project:
+
+1. Copy `AGENTS.md.tmpl` into your target project as `AGENTS.md`.
+2. Start working with an AI coding agent such as Codex or Claude Code inside that target repository.
+3. Let the agent create and maintain the required SCD project structure inside the target project, including:
+   - `semantic-context/` as the canonical semantic memory
+   - `history/` as raw interaction history for audit and reference
+4. Use the agent normally for feature work, but expect it to:
+   - validate semantic conflicts before implementing
+   - update the Semantic Context as the project evolves
+   - keep required test behavior traceable to the Semantic Context
+   - treat code as a derived artifact rather than the primary source of truth
 
 ## Demo status
 
@@ -48,21 +65,6 @@ In broad terms, the process was:
 - regenerate the application in a fresh project using only the demo Semantic Context
 
 The first implementation was created in Python. After that, the Semantic Context from the demo was copied into a new project directory, and the application was regenerated in Node.js from a prompt, without reusing the original codebase.
-
-## How to use SCD in a project
-
-To use SCD in a real project:
-
-1. Copy `AGENTS.md.tmpl` into your target project as `AGENTS.md`.
-2. Start working with an AI coding agent such as Codex or Claude Code inside that target repository.
-3. Let the agent create and maintain the required SCD project structure inside the target project, including:
-   - `semantic-context/` as the canonical semantic memory
-   - `history/` as raw interaction history for audit and reference
-4. Use the agent normally for feature work, but expect it to:
-   - validate semantic conflicts before implementing
-   - update the Semantic Context as the project evolves
-   - keep required test behavior traceable to the Semantic Context
-   - treat code as a derived artifact rather than the primary source of truth
 
 ## Important distinction
 
