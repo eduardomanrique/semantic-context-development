@@ -1,16 +1,16 @@
 # Semantic Context Development
 
-**Code is implementation. Semantic Context is truth.**
+**Semantic Context is the source. Code is the compiled artifact.**
 
 This repository explores **Semantic Context Development (SCD)**, a software development method in which the primary source of truth for a system is not code, but a living **Semantic Context** maintained through AI-assisted development.
 
-In SCD, code is treated as a compiled artifact of semantic intent. The Semantic Context is expected to preserve business meaning, flows, invariants, compatibility-relevant structures, and the behaviors that the system is expected to satisfy in tests.
+In SCD, code is treated as a compiled artifact generated from semantic intent. The Semantic Context is expected to preserve business meaning, flows, invariants, compatibility-relevant structures, and the behaviors that the system is expected to satisfy in tests.
 
 For the core principles and rationale, see the [SCD manifesto](./SCD-manifesto.md).
 
 ## What this repository contains
 
-This repository contains the **method**, not only a production project built with it.
+This repository contains the **method**, not just a production project built with it.
 
 It currently includes:
 
@@ -49,7 +49,6 @@ The demo includes:
 - business-rule questions answered from Semantic Context rather than code
 - semantically invalid change attempts being detected before implementation
 
-
 ## Demo experience
 
 The demo was used as a practical exercise of the method rather than as a hand-crafted example.
@@ -72,7 +71,7 @@ In an adopting project:
 
 - `semantic-context/` is the **canonical semantic memory**
 - `history/` is **non-canonical raw history**
-- implementation code is a **compiled artifact of Semantic Context**
+- implementation code is a **compiled artifact generated from Semantic Context**
 
 ## Status
 
