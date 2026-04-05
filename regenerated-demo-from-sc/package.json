@@ -1,0 +1,13 @@
+{
+  "name": "regenerated-demo-from-sc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Expense reimbursement demo regenerated from semantic context using Node.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
