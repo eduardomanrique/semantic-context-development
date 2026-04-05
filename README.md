@@ -32,7 +32,22 @@ The demo includes:
 - business-rule questions answered from Semantic Context rather than code
 - semantically invalid change attempts being detected before implementation
 
-This repository also includes a regenerated version of the demo in which only the Semantic Context was copied into a fresh project and the application was regenerated from it with a prompt, without reusing the original implementation code.
+
+## Demo experience
+
+The demo was used as a practical exercise of the method rather than as a hand-crafted example.
+
+In broad terms, the process was:
+
+- start from a short natural-language prompt describing the project
+- let the agent ask clarifying questions and build the Semantic Context incrementally
+- implement a small set of user stories
+- intentionally send invalid or conflicting stories to verify that semantic validation happened before implementation
+- evolve the UI/UX while keeping business behavior aligned with the Semantic Context
+- ask multiple business-rule questions to verify that the agent could answer from the Semantic Context rather than from implementation details
+- regenerate the application in a fresh project using only the demo Semantic Context
+
+The first implementation was created in Python. After that, the Semantic Context from the demo was copied into a new project directory, and the application was regenerated in Node.js from a prompt, without reusing the original codebase.
 
 ## How to use SCD in a project
 
