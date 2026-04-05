@@ -12,6 +12,9 @@ class ExpenseClaimRepository(Protocol):
     def get(self, claim_id: str) -> ExpenseClaim:
         raise NotImplementedError
 
+    def list_all(self) -> list[ExpenseClaim]:
+        raise NotImplementedError
+
 
 class InMemoryExpenseClaimRepository:
     def __init__(self) -> None:
@@ -23,3 +26,6 @@ class InMemoryExpenseClaimRepository:
 
     def get(self, claim_id: str) -> ExpenseClaim:
         return self._claims[claim_id]
+
+    def list_all(self) -> list[ExpenseClaim]:
+        return list(self._claims.values())

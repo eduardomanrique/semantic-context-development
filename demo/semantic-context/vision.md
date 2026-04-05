@@ -41,8 +41,8 @@ At this stage:
 - only employees are in scope as claimants
 - each claim represents exactly one expense
 - the claim itself stores the expense description, amount, and category
-- claim lifecycle behavior is defined only through creation, draft editing, save, and submission
-- the current delivery form is a small full web application with a FastAPI backend, a simple frontend, and in-memory persistence
+- claim lifecycle behavior is defined through creation, draft editing, save, submission, manager review, rejection reopen into corrected draft, finance payment completion, and claim listing
+- the current delivery form is a small full web application with a FastAPI backend, a simple frontend, authenticated sessions, and database persistence
 
 The broader multi-expense reimbursement-request model remains a possible future evolution, but it is not the active semantic model for the first story.
 
@@ -53,10 +53,14 @@ The current system is implemented as a small Python web application.
 At this stage:
 
 - FastAPI exposes the claim behavior through HTTP endpoints
-- the application serves a simple browser-based user interface for creating, editing, saving, viewing, and submitting claims
-- persistence is process-local and in-memory only
-- restarting the application clears stored claims
+- the application serves a simple browser-based user interface for creating, editing, saving, viewing, listing, submitting, reopening rejected claims into corrected drafts, reviewing, and marking claims as paid
+- the browser interface is organized into role-focused workflows rather than a single mixed-control workspace
+- persistence is database-backed and survives application restarts
 - the implementation structure should preserve business rules independently of both the HTTP and UI layers
+- authenticated username is the canonical user identity used by the claim workflow
+- unauthenticated users may access only login-related flows
+- only admin users may create additional users
+- there is no self-service signup flow in the current slice
 
 ## Initial operating assumptions
 
@@ -66,6 +70,7 @@ These assumptions are provisional and must be validated before implementation of
 - reimbursement claims currently represent exactly one expense
 - approval is required before reimbursement payment
 - claim fields for the first story are description, amount, and category
+- each authenticated user has exactly one role from `ADMIN`, `EMPLOYEE`, `MANAGER`, or `FINANCE`
 
 ## Current ambiguity
 

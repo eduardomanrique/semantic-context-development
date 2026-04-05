@@ -4,6 +4,8 @@
 
 Accepted for the current implementation slice.
 
+This initial delivery decision was later superseded for persistence and authentication by [2026-04-05-authenticated-database-backed-app.md](/Users/eduardokmanrique/Work/semantic-context-development/demo/semantic-context/decisions/2026-04-05-authenticated-database-backed-app.md).
+
 ## Decision
 
 The initial executable application is a small Python web application using FastAPI with in-memory persistence.
