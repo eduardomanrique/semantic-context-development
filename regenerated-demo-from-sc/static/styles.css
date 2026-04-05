@@ -261,6 +261,17 @@ a {
   text-decoration: none;
 }
 
+.back-link {
+  margin: 0 0 16px;
+}
+
+.back-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
 .details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

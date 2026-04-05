@@ -7,6 +7,7 @@ Date: 2026-04-05
 - Category values are free-form text in v1.
 - Amount entry uses a positive decimal value with up to two fractional digits.
 - The regenerated demo presents a role-specific web dashboard for employees, managers, and finance users.
+- Claim-detail pages include an explicit navigation link back to the role dashboard.
 
 ## Technical decisions
 

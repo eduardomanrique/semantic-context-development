@@ -268,6 +268,10 @@ def definition_row(label: str, value: str) -> str:
     return f"<div><dt>{escape(label)}</dt><dd>{escape(value)}</dd></div>"
 
 
+def detail_back_link() -> str:
+    return '<p class="back-link"><a href="/">Return to dashboard</a></p>'
+
+
 def review_history(claim: dict) -> str:
     reviews = claim["reviews"]
     if not reviews:
@@ -321,6 +325,7 @@ def render_employee_claim_detail(db_path: Path, user: User, claim_id: int) -> st
         """
 
     body = f"""
+    {detail_back_link()}
     <section class="split detail-layout">
       <div>
         <section class="card">
@@ -353,6 +358,7 @@ def render_manager_claim_detail(db_path: Path, user: User, claim_id: int) -> str
     with get_connection(db_path) as connection:
         claim = get_claim_detail(connection, user, claim_id)
     body = f"""
+    {detail_back_link()}
     <section class="split detail-layout">
       <section class="card">
         <p class="eyebrow">Submitted claim</p>
@@ -384,6 +390,7 @@ def render_finance_claim_detail(db_path: Path, user: User, claim_id: int) -> str
     with get_connection(db_path) as connection:
         claim = get_claim_detail(connection, user, claim_id)
     body = f"""
+    {detail_back_link()}
     <section class="split detail-layout">
       <section class="card">
         <p class="eyebrow">Approved claim</p>

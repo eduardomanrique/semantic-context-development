@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from expense_claims.services import (
     PermissionDenied,
@@ -19,6 +21,7 @@ from expense_claims.services import (
     submit_claim,
     update_claim,
 )
+from expense_claims.web import render_employee_claim_detail
 
 
 class ExpenseClaimsTests(unittest.TestCase):
@@ -180,6 +183,28 @@ class ExpenseClaimsTests(unittest.TestCase):
             reopen_claim(self.connection, self.alice, claim_id)
         with self.assertRaises(StateConflict):
             pay_claim(self.connection, self.finance, claim_id, "Again")
+
+    def test_employee_claim_detail_renders_return_link(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            db_path = Path(temp_dir) / "claims.db"
+            connection = get_connection(db_path)
+            initialize_database(connection)
+            alice = get_user_by_username(connection, "alice")
+            claim_id = create_claim(
+                connection,
+                alice,
+                {
+                    "title": "Taxi to airport",
+                    "expense_date": "2026-04-03",
+                    "amount": "22.15",
+                    "category": "Travel",
+                    "description": "Taxi ride to the airport for a client visit.",
+                },
+            )
+            connection.close()
+
+            html = render_employee_claim_detail(db_path, alice, claim_id)
+            self.assertIn('href="/">Return to dashboard</a>', html)
 
 
 if __name__ == "__main__":
