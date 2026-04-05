@@ -6,6 +6,8 @@ This repository explores **Semantic Context Development (SCD)**, a software deve
 
 In SCD, code is treated as a compiled artifact generated from semantic intent. The Semantic Context is expected to preserve business meaning, flows, invariants, compatibility-relevant structures, and the behaviors that the system is expected to satisfy in tests.
 
+This repository is also an experiment motivated by a practical hypothesis: as AI increases the speed and volume of code generation, the main bottleneck may shift from writing code to validating ever-larger amounts of generated change. SCD explores whether a Semantic Context can become a better primary artifact for preserving intent, validating behavior, guiding change, and regenerating systems, while humans remain responsible for goals, priorities, concerns, and final semantic judgment.
+
 For the core principles and rationale, see the [SCD manifesto](./SCD-manifesto.md).
 
 ## What this repository contains
@@ -40,7 +42,7 @@ To use SCD in a real project:
 
 ## Demo status
 
-A demo project has already been created and used to exercise the method.
+A demo project has already been created and used to exercise the method in practice.
 
 The demo includes:
 
@@ -51,7 +53,7 @@ The demo includes:
 
 ## Demo experience
 
-The demo was used as a practical exercise of the method rather than as a hand-crafted example.
+The demo was used as a practical exercise of the method rather than as a hand-crafted example, starting from a short project description and evolving through normal agent interaction.
 
 In broad terms, the process was:
 
