@@ -6,7 +6,7 @@ This repository explores **Semantic Context Development (SCD)**, a software deve
 
 In SCD, code is treated as a compiled artifact of semantic intent. The Semantic Context is expected to preserve business meaning, flows, invariants, compatibility-relevant structures, and the behaviors that the system is expected to satisfy in tests.
 
-For the core principles and rationale, see the [SCD manifesto](./00-thesis.md).
+For the core principles and rationale, see the [SCD manifesto](./SCD-manifesto.md).
 
 ## What this repository contains
 
