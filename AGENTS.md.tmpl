@@ -1,3 +1,5 @@
+
+
 # AGENTS.md
 
 This file defines the base operational standard for a target repository that adopts **Semantic Context Development (SCD)**.
@@ -24,14 +26,16 @@ When initializing or operating a target project that adopts SCD, the agent shoul
 - `semantic-context/decisions/` — semantic decisions and rationale, especially when behavior depends on interpretation, trade-offs, or autonomous model choices.
 - `semantic-context/incidents/` — incidents, bugs, corrections, and semantic discoveries that changed the understanding of the system.
 - `semantic-context/open-questions/` — unresolved ambiguities that still require clarification.
-- `semantic-context/trace/` — traceability links between semantic meaning, tests, APIs, screens, and implementation areas.
+- `semantic-context/trace/` — traceability links between semantic meaning, tests, UI, APIs, and implementation areas.
 - `history/` — raw interaction history, such as task requests, clarifications, and discussion logs, retained for audit and historical reference.
 
 If this structure does not yet exist, the agent should create it or propose creating it before substantial project work begins.
 
+At minimum, initialization should leave behind concrete initial artifacts such as `semantic-context/vision.md` and one or more open-question records, so that the project has actually entered SCD rather than merely discussing it.
+
 ## Project initialization mode
 
-If the project does not yet have an established Semantic Context, the agent must begin in initialization mode rather than implementation mode. A high-level project prompt alone is not sufficient justification to start defining detailed business semantics or building the application.
+If the project does not yet have an established Semantic Context, the agent must begin in initialization mode rather than implementation mode. A high-level project prompt alone is not sufficient justification to start defining detailed business semantics or building the application. Initialization is not optional: the agent should create the initial structure and write the first Semantic Context artifacts before waiting for the first concrete task.
 
 In initialization mode, the agent should:
 
@@ -41,9 +45,10 @@ In initialization mode, the agent should:
 4. record unresolved semantic ambiguities as open questions instead of forcing early decisions
 5. avoid prematurely deciding detailed business rules, defaults, lifecycle outcomes, UI assumptions, authentication behavior, test suites, or other lower-level semantics unless explicitly requested in a concrete follow-up task
 6. avoid implementation during initialization mode unless the user explicitly asks to start implementation
-7. leave the project ready to receive concrete user stories and semantic refinement incrementally
+7. stop in a ready state once the initial structure and first semantic artifacts have been created
+8. leave the project ready to receive concrete user stories and semantic refinement incrementally
 
-The absence of Semantic Context is not permission to guess detailed semantics too early. During initialization mode, the agent should prefer creating structure and recording open questions over requesting material semantic decisions that are only needed for implementation.
+The absence of Semantic Context is not permission to guess detailed semantics too early. During initialization mode, the agent should prefer creating structure and recording open questions over requesting material semantic decisions that are only needed for implementation. Once initialization artifacts exist, unresolved ambiguities should remain recorded as open questions rather than being turned into immediate follow-up questioning.
 
 ## Agent responsibilities
 
@@ -51,27 +56,28 @@ When working in a repository that follows SCD, always do the following:
 
 1. Read the current Semantic Context before planning, implementing, or answering questions about the system.
 2. Ensure that the required SCD project structure exists inside the target repository, creating or proposing the required Semantic Context and history directories when they are missing.
-3. If the project is still in initialization mode, initialize structure and capture only high-level intent; do not escalate into implementation-level semantic decisions unless the user explicitly asks for them.
+3. If the project is still in initialization mode, initialize structure, write the first semantic artifacts, and then stop in a ready state; do not escalate into implementation-level semantic decisions unless the user explicitly asks for them.
 4. Treat every task as both an implementation task and a semantic maintenance task.
 5. Interpret every new task as a proposed semantic change, not merely as a coding request.
 6. Before implementing, check whether the requested change conflicts with existing business rules, flows, invariants, security constraints, permissions, compatibility constraints, or other semantic commitments already present in the Semantic Context.
 7. Detect ambiguity, missing constraints, contradictions, hidden impact, and security concerns before implementation whenever possible.
 8. If more than one semantic interpretation is plausible, stop and ask for human clarification before proceeding.
-9. For initialization prompts, prefer recording such ambiguities in the Semantic Context as open questions rather than blocking initialization on implementation-specific answers.
-10. For every task, propose the tests that should exist based on the intended semantic change, and let humans validate or refine that proposal.
-11. Update the Semantic Context before or alongside implementation changes whenever the task changes system meaning, tested behavior, security posture, structural compatibility requirements, user-visible UI behavior, explicitly requested style decisions, or externally observable behavior.
-12. Treat failed tests, bug fixes, edge cases, user clarifications, compatibility discoveries, and security discoveries as required Semantic Context review points.
-13. Never finish a task with implementation changes, tested behaviors, business implications, security implications, UI decisions, or compatibility constraints that are not reflected in the Semantic Context.
-14. Ensure that every test the system is expected to pass corresponds to behavior explicitly described in, or validly derivable from, the Semantic Context.
-15. Preserve all semantically relevant structural details required for future behaviorally compatible regeneration, including data models, interfaces, contracts, states, transitions, permissions, security-relevant constraints, and observable behavior.
-16. When asked about business rules, flows, expected behavior, security constraints, UI behavior, or compatibility, prefer answering from the Semantic Context rather than inferring only from code.
-17. Prefer semantic reconciliation over textual reconciliation when merging Semantic Context changes.
-18. If implementation, testing, debugging, integration, or user validation reveals meaning that was not previously captured, update the Semantic Context before considering the task complete.
-19. If the model makes autonomous decisions to fill gaps — including UI layout, navigation flow, validation behavior, design choices, naming, or structural decisions — explicitly state those decisions to humans and record them in the Semantic Context.
-20. Optimize the Semantic Context for AI reasoning first, while keeping it reasonably readable for humans.
-21. Maintain raw interaction history in a separate history area, but do not treat that history as canonical semantic memory.
-22. Ensure that history artifacts make ordering explicit enough for a human to reconstruct the exact sequence of events, even when multiple entries happen on the same day.
-23. Treat human feedback as the final validator of semantic correctness.
+9. For initialization prompts, prefer recording ambiguities in the Semantic Context as open questions rather than blocking initialization on implementation-specific answers or turning them into immediate follow-up questioning.
+10. If initialization has completed and no concrete task has yet been given, do not propose default product choices, do not request implementation-facing clarifications, and do not proceed further; wait for the next user task.
+11. For every task, propose the tests that should exist based on the intended semantic change, and let humans validate or refine that proposal.
+12. Update the Semantic Context before or alongside implementation changes whenever the task changes system meaning, tested behavior, security posture, structural compatibility requirements, user-visible UI behavior, explicitly requested style decisions, or externally observable behavior.
+13. Treat failed tests, bug fixes, edge cases, user clarifications, compatibility discoveries, and security discoveries as required Semantic Context review points.
+14. Never finish a task with implementation changes, tested behaviors, business implications, security implications, UI decisions, or compatibility constraints that are not reflected in the Semantic Context.
+15. Ensure that every test the system is expected to pass corresponds to behavior explicitly described in, or validly derivable from, the Semantic Context.
+16. Preserve all semantically relevant structural details required for future behaviorally compatible regeneration, including data models, interfaces, contracts, states, transitions, permissions, security-relevant constraints, and observable behavior.
+17. When asked about business rules, flows, expected behavior, security constraints, UI behavior, or compatibility, prefer answering from the Semantic Context rather than inferring only from code.
+18. Prefer semantic reconciliation over textual reconciliation when merging Semantic Context changes.
+19. If implementation, testing, debugging, integration, or user validation reveals meaning that was not previously captured, update the Semantic Context before considering the task complete.
+20. If the model makes autonomous decisions to fill gaps — including UI layout, navigation flow, validation behavior, design choices, naming, or structural decisions — explicitly state those decisions to humans and record them in the Semantic Context.
+21. Optimize the Semantic Context for AI reasoning first, while keeping it reasonably readable for humans.
+22. Maintain raw interaction history in a separate history area, but do not treat that history as canonical semantic memory.
+23. Ensure that history artifacts make ordering explicit enough for a human to reconstruct the exact sequence of events, even when multiple entries happen on the same day.
+24. Treat human feedback as the final validator of semantic correctness.
 
 ## Validation duties
 
@@ -89,6 +95,8 @@ For every new task, the agent must explicitly validate whether the requested cha
 If such a conflict exists, the agent must surface it before implementation rather than silently proceeding.
 
 However, during project initialization, the agent should not demand resolution of implementation-specific decisions merely to create the initial SCD structure and semantic skeleton. Those decisions should usually be recorded as open questions unless the user explicitly requests implementation or concrete behavior definition.
+
+Initialization is successful once the structure and first semantic artifacts have been created. It should not continue into implementation-preparation questioning merely because open questions remain unresolved.
 
 ## Semantic Context expectations
 

@@ -50,6 +50,8 @@ In SCD, a task is not accepted merely because generated output seems to work. It
 - AI maintains the Semantic Context
 - When a project is still being initialized, the model should capture only high-level purpose, actors, and open semantic questions unless more detailed behavior is explicitly requested
 - The model should not escalate initialization into detailed product-definition questioning when the immediate goal is only to prepare the project to receive later tasks
+- After initialization artifacts are created, the model should stop in a ready state instead of continuing into implementation-preparation questioning
+- Initialization should result in created structure and initial Semantic Context artifacts, not only in questions or requests for clarification
 - Humans validate semantic evolution through interaction
 - Agent behavior must follow a stable SCD operational standard, while project semantic evolution happens through the Semantic Context
 - No meaningful code change is complete unless the Semantic Context is reconciled with it
@@ -109,17 +111,31 @@ That structure should include at least:
 
 The exact shape may evolve, but the method requires a clear separation between canonical semantic memory and non-canonical historical evidence.
 
+At minimum, initialization should leave behind concrete initial artifacts such as `semantic-context/vision.md` and one or more open-question records, so that the project has actually entered SCD rather than merely discussing it.
+
 ## Project initialization principle
 
-When a project has not yet established a Semantic Context, the first responsibility of the method is project initialization, not feature implementation.
+## Initialization stopping principle
 
-Initialization should create the required project structure, capture the high-level product purpose, identify the main actors and broad workflow intent, and record open semantic questions that still require clarification. It should avoid prematurely deciding detailed business rules, defaults, lifecycle outcomes, UI assumptions, authentication behavior, or other lower-level semantics unless the user explicitly asks for them. It should also avoid turning initialization into a product-design interview whose purpose is to define the application in detail before concrete tasks exist.
+Project initialization should end in a ready state, not in an implementation-preparation interview.
 
-In other words, the absence of Semantic Context should put the agent into initialization mode rather than implementation mode. The project should become ready to receive concrete user stories and semantic refinement incrementally, instead of front-loading detailed assumptions too early. After initialization, the model should primarily respond to user tasks rather than proactively trying to drive the product definition forward on its own.
+Once the agent has created the required structure, written the initial Semantic Context skeleton, and recorded open questions, it should stop and wait for the first concrete task.
+
+At this stage, unresolved ambiguities should remain recorded as open questions. The agent should not immediately ask the user to resolve implementation-facing decisions, and it should not propose default product choices unless the user explicitly asks to start implementation or provides the first concrete task.
+
+When a project has not yet established a Semantic Context, the first responsibility of the method is project initialization, not feature implementation. Initialization is not optional: the agent should create the initial structure and write the first Semantic Context artifacts before waiting for the first concrete task.
+
+Initialization should create the required project structure, capture the high-level product purpose, identify the main actors and broad workflow intent, and record open semantic questions that still require clarification. It should write an initial Semantic Context skeleton — especially vision and open questions — based on the user's initial description. It should avoid prematurely deciding detailed business rules, defaults, lifecycle outcomes, UI assumptions, authentication behavior, or other lower-level semantics unless the user explicitly asks for them. It should also avoid turning initialization into a product-design interview whose purpose is to define the application in detail before concrete tasks exist.
+
+In other words, the absence of Semantic Context should put the agent into initialization mode rather than implementation mode. The project should become ready to receive concrete user stories and semantic refinement incrementally, instead of front-loading detailed assumptions too early. During this phase, ambiguities should usually be recorded as open questions rather than used to block creation of the initial project skeleton. After initialization, the model should primarily respond to user tasks rather than proactively trying to drive the product definition forward on its own.
 
 ## Non-steering principle
 
 Semantic Context Development is not a license for the model to guide or shape the product beyond what the user has asked. The model may clarify ambiguities that block a concrete task, and it may make small implementation-facing decisions when necessary, but it should not proactively expand the problem space by proposing broad product-definition choices unless the user explicitly requests product-design help.
+
+If the user provides only an initial project description, the model should initialize the project, write the first semantic artifacts, and then stop in a ready state. It should not refuse initialization merely because future workflow or data-model choices remain unresolved.
+
+Likewise, it should not turn those unresolved choices into immediate follow-up questioning once initialization has already succeeded. They should remain open questions until a later concrete task makes them relevant.
 
 In particular, after project initialization, the default posture of the method is task-driven. The user provides concrete stories or changes; the model validates, records, and implements them semantically. It should not keep the project moving forward by inventing major semantic decisions simply because such decisions will eventually be needed.
 
@@ -133,11 +149,15 @@ If those are not reflected in the Semantic Context, the task remains incomplete 
 
 However, task completion should still be evaluated against the task the user actually asked for. The model should not create artificial incompleteness by demanding resolution of unrelated future product questions that are not required to complete the current task.
 
+The same logic applies to initialization: once the initial structure and semantic skeleton have been created, initialization is complete even if many implementation-facing choices remain unresolved.
+
 ## Canonical memory principle
 
 Semantic Context Development requires a strict distinction between canonical semantic memory and raw interaction history inside each adopting project. The Semantic Context is the canonical memory used by agents to understand, validate, and evolve the system. Raw conversation logs, prompts, and exploratory interaction history may be retained in a separate history area for audit, explanation, or historical reconstruction, but they should not be treated as the agent's primary working context. Because history is intended to preserve how understanding evolved over time, history artifacts should also make ordering explicit enough for humans to reconstruct the sequence of events reliably, even when multiple entries were created on the same day.
 
 Only semantically consolidated knowledge should be promoted into the Semantic Context. This prevents context overload, reduces semantic drift, and keeps the agent focused on the current intended system meaning rather than on unfiltered historical dialogue.
+
+Open questions created during initialization should remain as open questions rather than being used to trigger immediate clarification loops. Their purpose is to preserve uncertainty explicitly until a later task requires resolution.
 
 Because the Semantic Context is canonical and current, the method also requires that questions about the system be answerable from it directly. If answers depend on rereading raw history or reverse-engineering code, the Semantic Context has failed to capture enough of the intended system meaning.
 
