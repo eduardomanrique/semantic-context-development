@@ -63,7 +63,7 @@ In broad terms, the process was:
 - ask multiple business-rule questions to verify that the agent could answer from the Semantic Context rather than from implementation details
 - regenerate the application in a fresh project using only the demo Semantic Context
 
-The first implementation was created in Python. After that, the Semantic Context from the demo was copied into a new project directory, and the application was regenerated in Node.js from a prompt, without reusing the original codebase.
+The first implementation was created in Python. After that, the Semantic Context from the demo was copied into a new project directory, and the application was regenerated in Node.js from just one prompt, without reusing the original codebase.
 
 ## Important distinction
 
