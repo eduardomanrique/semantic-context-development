@@ -30,19 +30,24 @@ The `AGENTS.md.tmpl` file in this repository was generated from the SCD manifest
 To use SCD in a real project:
 
 1. Copy `AGENTS.md.tmpl` into your target project as `AGENTS.md`.
-2. Start working with an AI coding agent such as Codex or Claude Code inside that target repository.
-3. Let the agent create and maintain the required SCD project structure inside the target project, including:
+2. Start working with an AI coding agent such as Codex or Claude Code inside that target repository. If this is a new project, provide a short high-level initial description so the agent can initialize the project and create the required SCD structure, including:
    - `semantic-context/` as the canonical semantic memory
    - `history/` as raw interaction history for audit and reference
+3. After initialization, work mainly through short user stories or small concrete changes rather than large vague requests.
 4. Use the agent normally for feature work, but expect it to:
    - validate semantic conflicts before implementing
    - update the Semantic Context as the project evolves
    - keep required test behavior traceable to the Semantic Context
+   - answer business-rule and project-behavior questions from the Semantic Context rather than from reverse-engineering code
    - treat code as a derived artifact rather than the primary source of truth
+5. In practice, the intended usage is close to the demo flow in this repository: initialize from a short project description, move forward story by story, let ambiguities be clarified when they actually matter, and preserve the raw history alongside the consolidated Semantic Context.
 
 ## Demo status
 
+
 A demo project has already been created and used to exercise the method in practice.
+
+If you want to understand how the demo was actually generated step by step, including the task flow, clarifications, conflict checks, and semantic refinements, see the demo history stored in the demo project's `history/` directory.
 
 The demo includes:
 
@@ -53,7 +58,8 @@ The demo includes:
 
 ## Demo experience
 
-The demo was used as a practical exercise of the method rather than as a hand-crafted example, starting from a short project description and evolving through normal agent interaction.
+
+The demo was used as a practical exercise of the method rather than as a hand-crafted example, starting from a short project description and evolving through normal agent interaction. The corresponding raw interaction trail was preserved in the demo project's `history/` directory so that the generation process can be inspected afterward.
 
 In broad terms, the process was:
 
@@ -65,7 +71,10 @@ In broad terms, the process was:
 - ask multiple business-rule questions to verify that the agent could answer from the Semantic Context rather than from implementation details
 - regenerate the application in a fresh project using only the demo Semantic Context
 
-The first implementation was created in Python. After that, the Semantic Context from the demo was copied into a new project directory, and the application was regenerated in Node.js from just one prompt, without reusing the original codebase.
+
+The implementation was created in Node.js. After that, the Semantic Context from the demo was copied into a new project directory, and the application was regenerated in Python from just one prompt, without reusing the original codebase.
+
+So the repository contains both the resulting demo artifacts and the historical trail that led to them. The Semantic Context shows the consolidated meaning of the project, while the demo `history/` directory shows how that meaning was clarified, challenged, corrected, and expanded over time.
 
 ## Important distinction
 
