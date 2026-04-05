@@ -262,7 +262,8 @@ textarea:focus {
 .accent-button,
 .ghost-button,
 .approve-button,
-.reject-button {
+.reject-button,
+.pay-button {
   border: 0;
   border-radius: 999px;
   padding: 11px 18px;
@@ -280,6 +281,11 @@ textarea:focus {
   background: linear-gradient(135deg, var(--success) 0%, #1f5a38 100%);
 }
 
+.pay-button {
+  color: #fff8f3;
+  background: linear-gradient(135deg, #25644c 0%, #184637 100%);
+}
+
 .reject-button {
   color: #fff8f3;
   background: linear-gradient(135deg, var(--danger) 0%, #7b2321 100%);
@@ -295,13 +301,15 @@ textarea:focus {
 .accent-button:hover,
 .ghost-button:hover,
 .approve-button:hover,
-.reject-button:hover {
+.reject-button:hover,
+.pay-button:hover {
   transform: translateY(-1px);
 }
 
 .primary-button:disabled,
 .approve-button:disabled,
-.reject-button:disabled {
+.reject-button:disabled,
+.pay-button:disabled {
   opacity: 0.6;
   cursor: progress;
 }
@@ -355,6 +363,21 @@ textarea:focus {
   color: var(--danger);
 }
 
+.status-paid {
+  background: rgba(26, 86, 64, 0.12);
+  color: #184637;
+}
+
+.status-history-approve {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.status-history-reject {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
 .amount-block {
   font-size: 1.8rem;
   font-weight: 700;
@@ -394,6 +417,10 @@ textarea:focus {
 }
 
 .manager-workspace {
+  grid-template-columns: minmax(300px, 390px) 1fr;
+}
+
+.finance-workspace {
   grid-template-columns: minmax(300px, 390px) 1fr;
 }
 
@@ -440,6 +467,42 @@ textarea:focus {
 }
 
 .inline-note p {
+  margin: 0;
+}
+
+.history-block {
+  display: grid;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.history-list {
+  display: grid;
+  gap: 12px;
+}
+
+.history-entry {
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(247, 241, 229, 0.78);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.history-meta {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.history-entry p {
   margin: 0;
 }
 

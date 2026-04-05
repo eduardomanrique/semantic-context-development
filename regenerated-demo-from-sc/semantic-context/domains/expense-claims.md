@@ -16,6 +16,10 @@ The required claim fields in v1 are:
 - category
 - description
 
+In v1, category is free-form text.
+
+In v1, amount is entered as a positive decimal value with up to two fractional digits.
+
 Currency is out of scope in v1.
 
 Receipts and file attachments are out of scope in v1.

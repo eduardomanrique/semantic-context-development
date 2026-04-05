@@ -13,15 +13,19 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [claims, setClaims] = useState([]);
   const [managerClaims, setManagerClaims] = useState([]);
+  const [financeClaims, setFinanceClaims] = useState([]);
   const [selectedClaimId, setSelectedClaimId] = useState(null);
   const [selectedManagerClaim, setSelectedManagerClaim] = useState(null);
+  const [selectedFinanceClaim, setSelectedFinanceClaim] = useState(null);
   const [managerNote, setManagerNote] = useState("");
+  const [financeNote, setFinanceNote] = useState("");
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState([]);
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [reviewing, setReviewing] = useState(false);
+  const [paying, setPaying] = useState(false);
 
   useEffect(() => {
     void bootstrap();
@@ -51,8 +55,11 @@ export default function App() {
       const result = await request("/api/claims");
       setClaims(result.claims);
       setManagerClaims([]);
+      setFinanceClaims([]);
       setSelectedManagerClaim(null);
+      setSelectedFinanceClaim(null);
       setManagerNote("");
+      setFinanceNote("");
       return;
     }
 
@@ -60,8 +67,11 @@ export default function App() {
       const result = await request("/api/manager/claims");
       setManagerClaims(result.claims);
       setClaims([]);
+      setFinanceClaims([]);
       setSelectedClaimId(null);
       setForm(emptyForm);
+      setSelectedFinanceClaim(null);
+      setFinanceNote("");
 
       if (selectedManagerClaim) {
         const nextSelected = result.claims.find((claim) => claim.id === selectedManagerClaim.id);
@@ -77,17 +87,50 @@ export default function App() {
       return;
     }
 
+    if (user?.role === "finance") {
+      const result = await request("/api/finance/claims");
+      setFinanceClaims(result.claims);
+      setClaims([]);
+      setManagerClaims([]);
+      setSelectedClaimId(null);
+      setSelectedManagerClaim(null);
+      setManagerNote("");
+      setForm(emptyForm);
+
+      if (selectedFinanceClaim) {
+        const nextSelected = result.claims.find((claim) => claim.id === selectedFinanceClaim.id);
+
+        if (nextSelected) {
+          await loadFinanceClaim(nextSelected.id);
+        } else {
+          setSelectedFinanceClaim(null);
+          setFinanceNote("");
+        }
+      }
+
+      return;
+    }
+
     setClaims([]);
     setManagerClaims([]);
+    setFinanceClaims([]);
     setSelectedClaimId(null);
     setSelectedManagerClaim(null);
+    setSelectedFinanceClaim(null);
     setManagerNote("");
+    setFinanceNote("");
   }
 
   async function loadManagerClaim(claimId) {
     const result = await request(`/api/manager/claims/${claimId}`);
     setSelectedManagerClaim(result.claim);
     setManagerNote(result.claim.reviewNote ?? "");
+  }
+
+  async function loadFinanceClaim(claimId) {
+    const result = await request(`/api/finance/claims/${claimId}`);
+    setSelectedFinanceClaim(result.claim);
+    setFinanceNote(result.claim.paymentNote ?? "");
   }
 
   async function handleLogin(userId) {
@@ -103,7 +146,9 @@ export default function App() {
       setCurrentUser(result.user);
       setSelectedClaimId(null);
       setSelectedManagerClaim(null);
+      setSelectedFinanceClaim(null);
       setManagerNote("");
+      setFinanceNote("");
       setForm(emptyForm);
       await refreshRoleData(result.user);
     } catch (error) {
@@ -116,9 +161,12 @@ export default function App() {
     setCurrentUser(null);
     setClaims([]);
     setManagerClaims([]);
+    setFinanceClaims([]);
     setSelectedClaimId(null);
     setSelectedManagerClaim(null);
+    setSelectedFinanceClaim(null);
     setManagerNote("");
+    setFinanceNote("");
     setForm(emptyForm);
     setErrors([]);
     setNotice("");
@@ -172,12 +220,38 @@ export default function App() {
     }
   }
 
+  async function handleReopenClaim(claim) {
+    setErrors([]);
+    setNotice("");
+
+    try {
+      const result = await request(`/api/claims/${claim.id}/reopen`, { method: "POST" });
+      await refreshRoleData(currentUser);
+      setSelectedClaimId(result.claim.id);
+      setForm(toForm(result.claim));
+      setNotice("Rejected claim reopened as a draft.");
+    } catch (error) {
+      setErrors(error.details ?? [error.message]);
+    }
+  }
+
   async function handleOpenManagerClaim(claimId) {
     setErrors([]);
     setNotice("");
 
     try {
       await loadManagerClaim(claimId);
+    } catch (error) {
+      setErrors(error.details ?? [error.message]);
+    }
+  }
+
+  async function handleOpenFinanceClaim(claimId) {
+    setErrors([]);
+    setNotice("");
+
+    try {
+      await loadFinanceClaim(claimId);
     } catch (error) {
       setErrors(error.details ?? [error.message]);
     }
@@ -209,6 +283,34 @@ export default function App() {
       setErrors(error.details ?? [error.message]);
     } finally {
       setReviewing(false);
+    }
+  }
+
+  async function handlePayClaim() {
+    if (!selectedFinanceClaim) {
+      return;
+    }
+
+    setPaying(true);
+    setErrors([]);
+    setNotice("");
+
+    try {
+      const result = await request(`/api/finance/claims/${selectedFinanceClaim.id}/pay`, {
+        method: "POST",
+        body: JSON.stringify({
+          note: financeNote
+        })
+      });
+
+      await refreshRoleData(currentUser);
+      setSelectedFinanceClaim(null);
+      setFinanceNote("");
+      setNotice(`Claim ${result.claim.status}.`);
+    } catch (error) {
+      setErrors(error.details ?? [error.message]);
+    } finally {
+      setPaying(false);
     }
   }
 
@@ -253,8 +355,8 @@ export default function App() {
           <p className="eyebrow">Expense Reimbursement</p>
           <h1>Single-entry claims, routed cleanly.</h1>
           <p className="lede">
-            Employees create and submit claims, managers inspect submitted claims and lock in
-            approve or reject decisions, and finance remains seeded for the next workflow slice.
+            Employees create and submit claims, managers approve or reject them, and finance marks
+            approved claims as paid to complete the workflow.
           </p>
         </div>
 
@@ -316,7 +418,7 @@ export default function App() {
           <section className="panel stagger-2">
             <div className="section-heading">
               <h2>{selectedClaimId ? "Edit draft" : "New expense claim"}</h2>
-              <p>The employee owns the claim. Submission locks the draft from further edits.</p>
+              <p>Employees can edit drafts and reopen rejected claims before resubmitting them for review.</p>
             </div>
 
             <form className="claim-form" onSubmit={handleSave}>
@@ -406,7 +508,7 @@ export default function App() {
           <section className="panel stagger-3">
             <div className="section-heading">
               <h2>Your claims</h2>
-              <p>Drafts are editable. Submitted and reviewed claims are locked.</p>
+              <p>Drafts are editable, rejected claims can be reopened, and paid claims stay immutable.</p>
             </div>
 
             <div className="claim-list">
@@ -436,10 +538,21 @@ export default function App() {
 
                     <p className="claim-description">{claim.description}</p>
 
-                    {claim.reviewNote ? (
+                    {claim.reviewHistory?.length > 0 ? (
+                      <ReviewHistory reviewHistory={claim.reviewHistory} />
+                    ) : null}
+
+                    {claim.paymentNote ? (
                       <div className="inline-note">
-                        <strong>Manager note</strong>
-                        <p>{claim.reviewNote}</p>
+                        <strong>Finance note</strong>
+                        <p>{claim.paymentNote}</p>
+                      </div>
+                    ) : null}
+
+                    {claim.paidAt ? (
+                      <div className="inline-note">
+                        <strong>Paid at</strong>
+                        <p>{formatTimestamp(claim.paidAt, "Not paid yet")}</p>
                       </div>
                     ) : null}
 
@@ -457,6 +570,10 @@ export default function App() {
                             Submit
                           </button>
                         </>
+                      ) : claim.status === "rejected" ? (
+                        <button className="reject-button" onClick={() => handleReopenClaim(claim)} type="button">
+                          Revise claim
+                        </button>
                       ) : (
                         <p className="locked-note">Only draft claims can be edited.</p>
                       )}
@@ -539,7 +656,7 @@ export default function App() {
                   </div>
                   <div>
                     <dt>Submitted at</dt>
-                    <dd>{formatTimestamp(selectedManagerClaim.submittedAt)}</dd>
+                    <dd>{formatTimestamp(selectedManagerClaim.submittedAt, "Not submitted")}</dd>
                   </div>
                 </dl>
 
@@ -547,6 +664,10 @@ export default function App() {
                   <strong>Description</strong>
                   <p>{selectedManagerClaim.description}</p>
                 </div>
+
+                {selectedManagerClaim.reviewHistory?.length > 0 ? (
+                  <ReviewHistory reviewHistory={selectedManagerClaim.reviewHistory} />
+                ) : null}
 
                 <label>
                   <span>Optional review note</span>
@@ -585,12 +706,116 @@ export default function App() {
       ) : null}
 
       {currentUser?.role === "finance" ? (
-        <section className="panel stagger-2">
-          <div className="section-heading">
-            <h2>Finance portal</h2>
-            <p>Finance remains seeded for the reimbursement-completion story.</p>
-          </div>
-        </section>
+        <main className="workspace finance-workspace">
+          <section className="panel stagger-2">
+            <div className="section-heading">
+              <h2>Approved claims</h2>
+              <p>Any seeded finance user can open an approved claim and mark it as paid.</p>
+            </div>
+
+            <div className="claim-list">
+              {financeClaims.length === 0 ? (
+                <div className="empty-state">No approved claims are waiting for payment.</div>
+              ) : (
+                financeClaims.map((claim) => (
+                  <article className="claim-card compact-card" key={claim.id}>
+                    <div className="claim-card-header">
+                      <div>
+                        <span className={`status-pill status-${claim.status}`}>{claim.status}</span>
+                        <h3>{claim.title}</h3>
+                      </div>
+                      <div className="amount-block">{formatCurrencylessAmount(claim.amount)}</div>
+                    </div>
+
+                    <p className="compact-meta">
+                      {claim.employeeName} · {claim.category} · reviewed by {claim.reviewerName}
+                    </p>
+
+                    <div className="claim-actions">
+                      <button className="ghost-button" onClick={() => handleOpenFinanceClaim(claim.id)} type="button">
+                        Open claim
+                      </button>
+                    </div>
+                  </article>
+                ))
+              )}
+            </div>
+          </section>
+
+          <section className="panel stagger-3">
+            <div className="section-heading">
+              <h2>Payment detail</h2>
+              <p>Inspect the approved claim, add an optional payment note, and complete reimbursement.</p>
+            </div>
+
+            {selectedFinanceClaim ? (
+              <div className="manager-detail">
+                <div className="detail-head">
+                  <div>
+                    <span className={`status-pill status-${selectedFinanceClaim.status}`}>
+                      {selectedFinanceClaim.status}
+                    </span>
+                    <h3>{selectedFinanceClaim.title}</h3>
+                  </div>
+                  <div className="amount-block">{formatCurrencylessAmount(selectedFinanceClaim.amount)}</div>
+                </div>
+
+                <dl className="detail-grid">
+                  <div>
+                    <dt>Employee</dt>
+                    <dd>{selectedFinanceClaim.employeeName}</dd>
+                  </div>
+                  <div>
+                    <dt>Expense date</dt>
+                    <dd>{selectedFinanceClaim.expenseDate}</dd>
+                  </div>
+                  <div>
+                    <dt>Category</dt>
+                    <dd>{selectedFinanceClaim.category}</dd>
+                  </div>
+                  <div>
+                    <dt>Approved at</dt>
+                    <dd>{formatTimestamp(selectedFinanceClaim.reviewedAt, "Not approved")}</dd>
+                  </div>
+                </dl>
+
+                <div className="inline-note">
+                  <strong>Description</strong>
+                  <p>{selectedFinanceClaim.description}</p>
+                </div>
+
+                {selectedFinanceClaim.reviewNote ? (
+                  <div className="inline-note">
+                    <strong>Manager note</strong>
+                    <p>{selectedFinanceClaim.reviewNote}</p>
+                  </div>
+                ) : null}
+
+                {selectedFinanceClaim.reviewHistory?.length > 0 ? (
+                  <ReviewHistory reviewHistory={selectedFinanceClaim.reviewHistory} />
+                ) : null}
+
+                <label>
+                  <span>Optional payment note</span>
+                  <textarea
+                    onChange={(event) => setFinanceNote(event.target.value)}
+                    placeholder="Record any internal payment reference or context."
+                    rows="5"
+                    value={financeNote}
+                  />
+                </label>
+
+                <div className="form-actions">
+                  <button className="pay-button" disabled={paying} onClick={handlePayClaim} type="button">
+                    {paying ? "Saving..." : "Mark as paid"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="empty-state detail-empty">Open an approved claim to complete payment.</div>
+            )}
+          </section>
+        </main>
       ) : null}
     </div>
   );
@@ -606,6 +831,29 @@ function toForm(claim) {
   };
 }
 
+function ReviewHistory({ reviewHistory }) {
+  return (
+    <div className="history-block">
+      <strong>Review history</strong>
+      <div className="history-list">
+        {reviewHistory.map((entry) => (
+          <article className="history-entry" key={entry.id}>
+            <div className="history-header">
+              <span className={`status-pill status-history-${entry.decision}`}>
+                {entry.decision === "approve" ? "approved" : "rejected"}
+              </span>
+              <span className="history-meta">
+                {entry.reviewerName} · {formatTimestamp(entry.reviewedAt, "No review timestamp")}
+              </span>
+            </div>
+            <p>{entry.note || "No review note recorded."}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function formatCurrencylessAmount(amount) {
   return new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
@@ -613,9 +861,9 @@ function formatCurrencylessAmount(amount) {
   }).format(amount);
 }
 
-function formatTimestamp(value) {
+function formatTimestamp(value, emptyLabel) {
   if (!value) {
-    return "Not submitted";
+    return emptyLabel;
   }
 
   return new Intl.DateTimeFormat("en-US", {

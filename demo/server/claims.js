@@ -62,8 +62,12 @@ export function toClaimResponse(row) {
     reviewerId: row.reviewer_id,
     reviewNote: row.review_note,
     reviewedAt: row.reviewed_at,
+    payerId: row.payer_id,
+    paymentNote: row.payment_note,
+    paidAt: row.paid_at,
     employeeName: row.employee_name,
-    reviewerName: row.reviewer_name
+    reviewerName: row.reviewer_name,
+    payerName: row.payer_name
   };
 }
 
@@ -82,5 +86,28 @@ export function validateReviewInput(input) {
       decision,
       note
     }
+  };
+}
+
+export function validatePaymentInput(input) {
+  const note = typeof input.note === "string" ? input.note.trim() : "";
+
+  return {
+    errors: [],
+    value: {
+      note
+    }
+  };
+}
+
+export function toReviewHistoryEntry(row) {
+  return {
+    id: row.id,
+    claimId: row.claim_id,
+    reviewerId: row.reviewer_id,
+    reviewerName: row.reviewer_name,
+    decision: row.decision,
+    note: row.note,
+    reviewedAt: row.reviewed_at
   };
 }

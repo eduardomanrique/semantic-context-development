@@ -2,6 +2,12 @@
 
 Created during repository initialization from the first project description.
 
+## Resolved since initialization
+
+- Category values are free-form in v1.
+- Amount values are positive decimals with up to two fractional digits in v1.
+- The regenerated implementation stack is a Python server-rendered web application with SQLite persistence.
+
 ## Workflow and lifecycle
 
 1. What exact claim states should exist beyond create, submit, approve, and reimburse?
@@ -12,22 +18,18 @@ Created during repository initialization from the first project description.
 
 ## Claim contents and validation
 
-5. Are category values fixed or free-form in v1?
-6. What precision and formatting rules should amount follow beyond being present and positive?
-7. Are tax rules or reimbursement caps in scope later?
+4. Are tax rules or reimbursement caps in scope later?
 
 ## Roles and permissions
 
-9. How are employees, managers, and finance users authenticated?
-10. Can one user hold multiple roles?
-11. Which claims can a given manager review?
-12. Which claims can finance users access?
+5. Can one user hold multiple roles?
+6. Which claims can a given manager review outside the seeded demo scope?
+7. Which claims can finance users access outside the seeded demo scope?
 
 ## Technical and operational choices
 
-13. What stack should be used for frontend, backend, and persistence?
-14. Is the system single-tenant and for local/demo use only, or should multi-user behavior be exercised realistically?
-15. What auditability expectations exist for approval and reimbursement actions?
+8. Is the system single-tenant and for local/demo use only, or should multi-user behavior be exercised realistically?
+9. What auditability expectations exist for approval and reimbursement actions?
 
 ## Testing follow-up
 
