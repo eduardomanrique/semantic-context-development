@@ -2,7 +2,7 @@
 
 ## Tagline
 
-Code is implementation. Semantic Context is truth.
+Semantic Context is the source. Code is the compiled artifact.
 
 ## Thesis
 
