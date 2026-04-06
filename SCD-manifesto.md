@@ -57,6 +57,11 @@ In SCD, a task is not accepted merely because generated output seems to work. It
 - The model should not escalate initialization into detailed product-definition questioning when the immediate goal is only to prepare the project to receive later tasks
 - After initialization artifacts are created, the model should stop in a ready state instead of continuing into implementation-preparation questioning
 - Initialization should result in created structure and initial Semantic Context artifacts, not only in questions or requests for clarification
+- When adopting SCD in an existing project that already has code but no Semantic Context yet, the first step is not greenfield initialization but semantic bootstrap from the current project state
+- In that bootstrap mode, the model should distinguish clearly between behavior confirmed by documentation, tests, or explicit human input and behavior merely inferred from the current implementation
+- Existing-project bootstrap should aim for operational answerability over the core domain, not only structural initialization
+- For central domain operations, bootstrap should try to capture permissions, preconditions, forbidden states, relevant entities or fields, side effects, and remaining uncertainties whenever the evidence is strong enough
+- Bootstrap should explicitly report what remains only partially captured so humans can see the current semantic coverage gap
 - Humans validate semantic evolution through interaction
 - Agent behavior must follow a stable SCD operational standard, while project semantic evolution happens through the Semantic Context
 - No meaningful code change is complete unless the Semantic Context is reconciled with it
@@ -104,6 +109,7 @@ Semantic Context Development depends not only on the existence of a Semantic Con
 
 When a project adopts SCD, agents following that standard are responsible for creating and maintaining the required project structure inside the target repository itself, including the Semantic Context and its supporting areas such as raw history. In this model, the Semantic Context is the living source of system meaning within the adopting project, while the agent standard is the stable method used to maintain it. The Semantic Context evolves continuously with the project; the SCD agent standard evolves much more slowly, as part of the method itself. Projects may adopt or version that standard, but it should not drift implicitly as part of normal feature work.
 
+
 ## Required project structure
 
 An adopting project should contain a minimum SCD structure created and maintained by the agent inside the target repository.
@@ -125,9 +131,48 @@ The exact shape may evolve, but the method requires a clear separation between c
 
 At minimum, initialization should leave behind concrete initial artifacts such as `semantic-context/vision.md` and one or more open-question records, so that the project has actually entered SCD rather than merely discussing it.
 
+
+## Existing-project bootstrap principle
+
+SCD should also support adoption in projects that already contain implementation but do not yet have a Semantic Context.
+
+In that situation, the first step is not ordinary new-project initialization. It is semantic bootstrap from the current project state.
+
+During bootstrap, the agent should read the existing repository as broadly as needed — including code, tests, documentation, and any project-specific instruction files — and create the initial Semantic Context structure to describe the system as it currently appears to behave.
+
+However, bootstrap must not silently treat all observed implementation behavior as confirmed intention. The resulting Semantic Context should distinguish as clearly as possible between:
+
+- behavior confirmed by explicit human input
+- behavior supported by documentation or tests
+- behavior inferred from the current implementation
+- open uncertainty that still requires clarification
+
+The goal of bootstrap is to give an existing project an initial canonical semantic memory without pretending that all meaning can be recovered perfectly from code alone.
+
+Bootstrap should therefore aim for more than repository structure and high-level description. For the core domain of the existing project, it should try to make the main operational questions answerable from the Semantic Context as early as reasonably possible.
+
+In practice, that means bootstrap should attempt to capture, for each central operation whenever evidence is strong enough:
+
+- who can perform it
+- what must already be true before it is allowed
+- in which states or situations it is forbidden
+- which entities, fields, or relationships are materially involved
+- what side effects or downstream effects it has
+- what remains uncertain or only partially captured
+
+A project should not be considered semantically well-bootstrapped merely because the structure exists. The bootstrap should also make clear which operational areas are already answerable from the Semantic Context and which still require further semantic reconciliation.
+
 ## Project initialization principle
 
 When a project has not yet established a Semantic Context, the first responsibility of the method is project initialization, not feature implementation. Initialization is not optional: the agent should create the initial structure and write the first Semantic Context artifacts before waiting for the first concrete task. In this situation, the first prompt must be treated only as project initialization input, not as the beginning of the first task, even if the prompt is phrased as a request to build the system. This rule has priority over any apparent implementation request contained in that same first prompt.
+
+This principle applies directly to new projects. Existing projects without Semantic Context follow the separate bootstrap principle: they still begin with Semantic Context creation first, but that creation starts from the already existing system rather than from a blank project description.
+
+Initialization should create the required project structure, capture the high-level product purpose, identify the main actors and broad workflow intent, and record open semantic questions that still require clarification. It should write an initial Semantic Context skeleton — especially vision and open questions — based on the user's initial description. It should avoid prematurely deciding detailed business rules, defaults, lifecycle outcomes, UI assumptions, authentication behavior, or other lower-level semantics unless the user explicitly asks for them. It should also avoid turning initialization into a product-design interview whose purpose is to define the application in detail before concrete tasks exist. Ambiguities noticed at this stage should be recorded, not immediately turned into clarification requests needed for implementation.
+
+In other words, the absence of Semantic Context should put the agent into initialization mode rather than implementation mode. The project should become ready to receive concrete user stories and semantic refinement incrementally, instead of front-loading detailed assumptions too early. During this phase, ambiguities should be recorded as open questions rather than used to block creation of the initial project skeleton or trigger immediate clarification loops. After initialization, the model should explicitly state that the project has been initialized and is ready for the first concrete task. Only after that should it begin treating later prompts as tasks to validate and implement.
+
+
 ## First-prompt precedence principle
 
 If a repository does not yet contain an established Semantic Context structure, the first user prompt must always be treated as project initialization input.
@@ -143,9 +188,6 @@ In that situation, the agent must only:
 
 Implementation may begin only in a later prompt, after initialization artifacts already exist.
 
-Initialization should create the required project structure, capture the high-level product purpose, identify the main actors and broad workflow intent, and record open semantic questions that still require clarification. It should write an initial Semantic Context skeleton — especially vision and open questions — based on the user's initial description. It should avoid prematurely deciding detailed business rules, defaults, lifecycle outcomes, UI assumptions, authentication behavior, or other lower-level semantics unless the user explicitly asks for them. It should also avoid turning initialization into a product-design interview whose purpose is to define the application in detail before concrete tasks exist. Ambiguities noticed at this stage should be recorded, not immediately turned into clarification requests needed for implementation.
-
-In other words, the absence of Semantic Context should put the agent into initialization mode rather than implementation mode. The project should become ready to receive concrete user stories and semantic refinement incrementally, instead of front-loading detailed assumptions too early. During this phase, ambiguities should be recorded as open questions rather than used to block creation of the initial project skeleton or trigger immediate clarification loops. After initialization, the model should explicitly state that the project has been initialized and is ready for the first concrete task. Only after that should it begin treating later prompts as tasks to validate and implement.
 
 ## Initialization stopping principle
 
@@ -154,6 +196,8 @@ Project initialization should end in a ready state, not in an implementation-pre
 Once the agent has created the required structure, written the initial Semantic Context skeleton, and recorded open questions, it should stop and wait for the first concrete task. Its completion message should make that explicit: the project has been initialized, the initial description has been recorded, and the repository is ready for the first task.
 
 At this stage, unresolved ambiguities should remain recorded as open questions. The agent should not immediately ask the user to resolve implementation-facing decisions, it should not propose default product choices, and it should not interpret phrases like build, create, or clarify before implementation as permission to continue past initialization. Those questions belong to later concrete tasks. In particular, the first response in a project with no Semantic Context structure yet should end with initialization, not with a clarification questionnaire.
+
+For existing-project bootstrap, however, stopping criteria should be stronger than mere structural initialization. The repository may be structurally initialized quickly, but bootstrap should still aim to capture enough core operational semantics that important project questions are not left answerable only by rereading code.
 
 ## Non-steering principle
 
@@ -189,6 +233,10 @@ The initial project description should also be preserved as part of the initiali
 
 Because the Semantic Context is canonical and current, the method also requires that questions about the system and project be answerable from it directly. If answers depend on rereading raw history or reverse-engineering code, the Semantic Context has failed to capture enough of the intended system meaning. This is especially important whenever code behavior exists without clear evidence that the behavior was actually intended.
 
+That problem becomes especially visible during existing-project bootstrap. In that case, the method should avoid collapsing observed behavior and intended behavior into the same category when the evidence for intention is weak. A bootstrapped Semantic Context should preserve that distinction explicitly whenever possible.
+
+When bootstrap cannot yet answer an important operational question from the Semantic Context, that gap should be made explicit rather than hidden behind a structurally complete but semantically shallow initialization.
+
 For that reason, history naming and metadata should not rely on date alone when that would make ordering ambiguous. If multiple history entries occur on the same day, the history should include enough ordering information — such as timestamps, sequence numbers, or other explicit ordering markers — so that the exact progression remains understandable to a human reader.
 
 ## Current-state principle
@@ -209,6 +257,8 @@ This matters because code alone may show that the system does something without 
 
 This applies not only to business meaning but also to important implementation choices. If a future reader cannot tell from the Semantic Context which major technical decisions were deliberately chosen versus merely happened to be produced by a model, the Semantic Context is still incomplete.
 
+This requirement is especially important for existing-project bootstrap. If the Semantic Context created from an existing system still cannot answer basic operational questions about the core domain, then bootstrap has not yet achieved enough semantic coverage, even if the repository structure itself has already been created.
+
 ## Semantic reconciliation principle
 
 Semantic Context Development prefers semantic reconciliation over purely textual reconciliation.
@@ -220,6 +270,10 @@ When changes from different tasks or branches interact, the important question i
 Expected tests are part of the Semantic Context even when executable tests are not stored there directly. For every task, the model must propose the tests that should exist based on the intended semantic change, and humans validate or refine that proposal. The Semantic Context must describe what must be verified about the system, and executable tests should be generated or maintained as derived artifacts from that semantic intent.
 
 During project initialization, however, the model should not invent detailed test suites prematurely. At that stage it should propose only the tests justified by already clarified semantics, and leave unresolved behavior as open semantic questions rather than fabricating testable detail too early.
+
+During existing-project bootstrap, the model should also treat pre-existing tests as important semantic evidence, but not as infallible proof of full intended meaning. Tests help anchor the initial Semantic Context, yet inferred meaning should still be separated from explicitly confirmed meaning whenever that distinction matters.
+
+Existing-project bootstrap should also leave behind an explicit view of current semantic coverage: what is already answerable from the Semantic Context, what is only partially captured, and what still requires human clarification or later reconciliation.
 
 When a system is regenerated from Semantic Context, regeneration should be validated not only by whether code was produced, but by whether the regenerated system still satisfies the expected behaviors, business rules, security constraints, and derived tests described by the Semantic Context.
 
