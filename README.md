@@ -8,7 +8,11 @@ In SCD, code is treated as a compiled artifact generated from semantic intent. T
 
 This repository is also an experiment motivated by a practical hypothesis: as AI increases the speed and volume of code generation, the main bottleneck may shift from writing code to validating ever-larger amounts of generated change. A large share of human code review has historically helped keep code understandable and maintainable for humans operating under strong cognitive limits. If implementation is increasingly generated and manipulated by AI, that part of review may lose relative importance over time, while validation may move upward toward intent, rules, constraints, and semantic coherence. SCD explores whether a Semantic Context can become a better primary artifact for preserving intent, validating behavior, guiding change, and regenerating systems, while humans remain responsible for goals, priorities, concerns, and final semantic judgment.
 
+This should be read as an experiment, not as a prediction that SCD is "the future" of software engineering. The repository explores a possible shift in emphasis under AI-assisted development, while remaining compatible with ordinary current practice, including human code review. The hypothesis is not that review disappears, but that more of the validation burden may gradually move upward from line-by-line code reading toward semantic review of intent, rules, constraints, and system coherence.
+
 For the core principles and rationale, see the [SCD manifesto](./SCD-manifesto.md).
+
+The repository is also intentionally honest about process: both the method and the demo were developed with heavy AI assistance. That is not treated here as something to hide, but as part of the experimental setup. The point is not that humans disappear, but that human guidance, semantic validation, and decision-making become more important as generated code becomes cheaper and more abundant.
 
 ## What this repository contains
 
@@ -22,6 +26,7 @@ It currently includes:
 - the demo interaction history
 - a regenerated version of the demo recreated from Semantic Context
 - ongoing notes and experiments around the method
+- an explicit experiment in AI-assisted development, where the Semantic Context is maintained as consolidated semantic memory rather than allowed to grow as an unstructured pile of specs
 
 ## How to use SCD in a project
 
@@ -40,6 +45,7 @@ To use SCD in a real project:
    - keep required test behavior traceable to the Semantic Context
    - answer business-rule and project-behavior questions from the Semantic Context rather than from reverse-engineering code
    - make major technical decisions explicit instead of leaving them buried in generated code
+   - maintain the Semantic Context as consolidated semantic memory rather than as an ever-growing pile of appended specifications
    - treat code as a derived artifact rather than the primary source of truth
 5. In practice, the intended usage is close to the demo flow in this repository: initialize from a short project description, move forward story by story, let ambiguities be clarified when they actually matter, and preserve the raw history alongside the consolidated Semantic Context.
 
@@ -61,6 +67,8 @@ The demo includes:
 
 
 The demo was used as a practical exercise of the method rather than as a hand-crafted example, starting from a short project description and evolving through normal agent interaction. The corresponding raw interaction trail was preserved in the demo project's `history/` directory so that the generation process can be inspected afterward.
+
+The demo is also intentionally honest about authorship conditions: it was heavily AI-assisted, and that is part of what the experiment is trying to examine. The point is not to present a hand-crafted artifact pretending AI was absent, but to see whether a human-guided, semantically maintained process can produce something more controlled than ordinary vibe coding while remaining more continuous than static spec-driven work.
 
 In broad terms, the process was:
 
@@ -87,6 +95,7 @@ In an adopting project:
 - `history/` is **non-canonical raw history**
 - implementation code is a **compiled artifact generated from Semantic Context**
 - human review can still exist, but SCD explores whether more of the validation burden can move from line-by-line code reading toward semantic review of intent, rules, and constraints
+- the Semantic Context is maintained primarily as working semantic memory for AI operation and continuity, while humans can inspect it directly or query it through the agent when they need answers about the project
 
 ## Status
 
