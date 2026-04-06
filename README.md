@@ -6,7 +6,7 @@ This repository explores **Semantic Context Development (SCD)**, a software deve
 
 In SCD, code is treated as a compiled artifact generated from semantic intent. The Semantic Context is expected to preserve business meaning, flows, invariants, compatibility-relevant structures, and the behaviors that the system is expected to satisfy in tests.
 
-This repository is also an experiment motivated by a practical hypothesis: as AI increases the speed and volume of code generation, the main bottleneck may shift from writing code to validating ever-larger amounts of generated change. SCD explores whether a Semantic Context can become a better primary artifact for preserving intent, validating behavior, guiding change, and regenerating systems, while humans remain responsible for goals, priorities, concerns, and final semantic judgment.
+This repository is also an experiment motivated by a practical hypothesis: as AI increases the speed and volume of code generation, the main bottleneck may shift from writing code to validating ever-larger amounts of generated change. A large share of human code review has historically helped keep code understandable and maintainable for humans operating under strong cognitive limits. If implementation is increasingly generated and manipulated by AI, that part of review may lose relative importance over time, while validation may move upward toward intent, rules, constraints, and semantic coherence. SCD explores whether a Semantic Context can become a better primary artifact for preserving intent, validating behavior, guiding change, and regenerating systems, while humans remain responsible for goals, priorities, concerns, and final semantic judgment.
 
 For the core principles and rationale, see the [SCD manifesto](./SCD-manifesto.md).
 
@@ -39,6 +39,7 @@ To use SCD in a real project:
    - update the Semantic Context as the project evolves
    - keep required test behavior traceable to the Semantic Context
    - answer business-rule and project-behavior questions from the Semantic Context rather than from reverse-engineering code
+   - make major technical decisions explicit instead of leaving them buried in generated code
    - treat code as a derived artifact rather than the primary source of truth
 5. In practice, the intended usage is close to the demo flow in this repository: initialize from a short project description, move forward story by story, let ambiguities be clarified when they actually matter, and preserve the raw history alongside the consolidated Semantic Context.
 
@@ -64,7 +65,7 @@ The demo was used as a practical exercise of the method rather than as a hand-cr
 In broad terms, the process was:
 
 - start from a short natural-language prompt describing the project
-- let the agent ask clarifying questions and build the Semantic Context incrementally
+- let the agent initialize the project first, then clarify only the ambiguities that actually mattered to each story while building the Semantic Context incrementally
 - implement a small set of user stories
 - intentionally send invalid or conflicting stories to verify that semantic validation happened before implementation
 - evolve the UI/UX while keeping business behavior aligned with the Semantic Context
@@ -76,6 +77,8 @@ The implementation was created in Node.js. After that, the Semantic Context from
 
 So the repository contains both the resulting demo artifacts and the historical trail that led to them. The Semantic Context shows the consolidated meaning of the project, while the demo `history/` directory shows how that meaning was clarified, challenged, corrected, and expanded over time.
 
+The demo also reflects an important practical idea behind SCD: the Semantic Context is not meant to become an ever-growing pile of specs. It is maintained as consolidated semantic memory, updated as the project evolves, so that the AI can operate on current intended meaning rather than on an unstructured accumulation of old requirements. In that sense, the Semantic Context is optimized primarily for AI operation and semantic continuity, while humans can still inspect it directly or ask the agent questions and get answers grounded in it.
+
 ## Important distinction
 
 In an adopting project:
@@ -83,6 +86,7 @@ In an adopting project:
 - `semantic-context/` is the **canonical semantic memory**
 - `history/` is **non-canonical raw history**
 - implementation code is a **compiled artifact generated from Semantic Context**
+- human review can still exist, but SCD explores whether more of the validation burden can move from line-by-line code reading toward semantic review of intent, rules, and constraints
 
 ## Status
 
