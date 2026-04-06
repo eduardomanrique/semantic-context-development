@@ -22,7 +22,7 @@ It currently includes:
 
 - the SCD concept and manifesto
 - the base agent operating standard in `AGENTS.md.tmpl`, derived from the SCD manifesto
-- a demo project showing the method in use (see [demo walkthrough](./demo-walkthrough.md))
+- a demo project showing the method in use (see [demo walkthrough](./notes/demo-walkthrough.md))
 - the demo interaction history
 - a regenerated version of the demo recreated from Semantic Context
 - ongoing notes and experiments around the method
@@ -54,7 +54,7 @@ To use SCD in a real project:
 
 A demo project has already been created and used to exercise the method in practice.
 
-For a more practical step-by-step view of what was done in the demo, see the [demo walkthrough](./demo-walkthrough.md).
+For a more practical step-by-step view of what was done in the demo, see the [demo walkthrough](./notes/demo-walkthrough.md).
 
 If you want to understand how the demo was actually generated step by step, including the task flow, clarifications, conflict checks, and semantic refinements, see the demo history stored in the demo project's `history/` directory.
 
