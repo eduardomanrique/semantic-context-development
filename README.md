@@ -2,7 +2,7 @@
 
 **Semantic Context is the source. Code is the compiled artifact.**
 
-This repository explores **Semantic Context Development (SCD)**, a software development method in which the primary source of truth for a system is not code, but a living **Semantic Context** maintained through AI-assisted development.
+This repository explores **Semantic Context Development (SCD)**, an experimental approach to AI-assisted software development in which the primary source of truth for a system is not code, but a living **Semantic Context** maintained through AI-assisted development.
 
 In SCD, code is treated as a compiled artifact generated from semantic intent. The Semantic Context is expected to preserve business meaning, flows, invariants, compatibility-relevant structures, and the behaviors that the system is expected to satisfy in tests.
 
